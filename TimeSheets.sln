@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30711.63
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeSheets", "TimeSheets\TimeSheets.csproj", "{F3FD0C4F-4553-472B-9F00-18CB594C5FD5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F3FD0C4F-4553-472B-9F00-18CB594C5FD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3FD0C4F-4553-472B-9F00-18CB594C5FD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3FD0C4F-4553-472B-9F00-18CB594C5FD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3FD0C4F-4553-472B-9F00-18CB594C5FD5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {68A33E0F-B9CE-406B-8468-C0640FC6247A}
+	EndGlobalSection
+EndGlobal
