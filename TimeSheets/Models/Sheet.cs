@@ -17,5 +17,6 @@ namespace TimeSheets.Models
         public Contract Contract { get; set; }
         public Service Service { get; set; }
         public Invoice Invoice { get; set; }
+        public bool IsDeleted { get; internal set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TimeSheets.Domain.Interfaces;
@@ -22,6 +23,9 @@ namespace TimeSheets.Controllers
             _logger.LogDebug("NLog зарегистрирован в UsersController");
         }
 
+        /// <summary> Получение информации о пользователе по его Id </summary>
+		/// <param name="id"> Id пользователя </param>
+		/// <returns> Инорфмация о пользователе </returns>
         [HttpGet("{id}")]
         public IActionResult Get([FromQuery] Guid id)
         {
@@ -30,6 +34,8 @@ namespace TimeSheets.Controllers
             return Ok(result);
         }
 
+        /// <summary> Получение информации о всех активных пользователях </summary>
+        /// <returns> Инорфмация о пользователях </returns>
         [HttpGet]
         public async Task<IActionResult> GetItems()
         {
@@ -38,14 +44,23 @@ namespace TimeSheets.Controllers
             return Ok(result);
         }
 
+        /// <summary> Создание нового пользователя </summary>
+		/// <param name="request"> Запрос на создание пользователя </param>
+		/// <returns> Id созданного пользователя </returns>
+		[Authorize(Roles = "admin")]
         [HttpPost]
+
         public async Task<IActionResult> CreateUser([FromBody] UserRequest request)
         {
-            var id = await _userManager.CreateUser(request);
+            var response = await _userManager.CreateUser(request);
 
-            return Ok(id);
+            return Ok(response);
         }
 
+        /// <summary> Изменение существующего пользователя </summary>
+		/// <param name="id"> Id изменяемого пользователя </param>
+		/// <param name="request"> Запрос на изменение пользователя </param>
+		[Authorize(Roles = "admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UserRequest request)
         {            
@@ -54,6 +69,9 @@ namespace TimeSheets.Controllers
             return Ok();
         }
 
+        /// <summary>Удаление пользователя</summary>
+		/// <param name="id">Id удаляемого пользователя</param>
+		[Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
