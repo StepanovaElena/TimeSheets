@@ -10,9 +10,9 @@ namespace TimeSheets.Data.Implementation
 {
     public class EmployeeRepo : IEmployeeRepo
     {
-        private readonly TimesheetDbContext _context;
+        private readonly TimeSheetDbContext _context;
 
-        public EmployeeRepo(TimesheetDbContext context)
+        public EmployeeRepo(TimeSheetDbContext context)
         {
             _context = context;
         }

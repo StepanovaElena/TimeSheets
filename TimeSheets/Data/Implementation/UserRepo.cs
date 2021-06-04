@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TimeSheets.Data.EntityConfiguration;
@@ -10,9 +11,9 @@ namespace TimeSheets.Data.Implementation
 {
     public class UserRepo : IUserRepo
     {
-        private readonly TimesheetDbContext _context;
+        private readonly TimeSheetDbContext _context;
 
-        public UserRepo(TimesheetDbContext context)
+        public UserRepo(TimeSheetDbContext context)
         {
             _context = context;
         }
@@ -25,6 +26,16 @@ namespace TimeSheets.Data.Implementation
         public async Task<User> GetUserById(Guid id)
         {
             return await _context.Users.FindAsync(id);
+        }
+
+        public async Task<User> GetUserByLoginPass(string login, byte[] passwordHash)
+        {
+            return await _context.Users.FirstOrDefaultAsync(x => x.Username == login && x.PasswordHash == passwordHash);
+        }
+
+        public async Task<User> GetUserByToken(string token)
+        {
+            return await _context.Users.FirstOrDefaultAsync(x => x.RefreshTokens.Any(x => x.Token == token));
         }
 
         public async Task Create(User user)

@@ -5,3 +5,6 @@
 /.vs
 /TimeSheets/bin/Debug/netcoreapp3.1
 /TimeSheets/obj
+/TimeSheets/bin/Debug/net5.0
+/TimeSheets/.vs/TimeSheets/v16
+/TimeSheets/.vs/TimeSheets/DesignTimeBuild

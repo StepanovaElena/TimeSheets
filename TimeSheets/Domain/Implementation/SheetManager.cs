@@ -58,5 +58,10 @@ namespace TimeSheets.Domain.Implementation
             
             await _sheetRepo.Update(sheet);
         }
+
+        public async Task Delete(Guid id)
+        {
+            await _sheetRepo.Delete(id);
+        }
     }
 }

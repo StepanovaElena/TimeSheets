@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ namespace TimeSheets.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize(Roles = "admin")]
     public class EmployeesController : ControllerBase
     {
         private readonly ILogger<EmployeesController> _logger;
@@ -24,6 +26,9 @@ namespace TimeSheets.Controllers
             _logger.LogDebug("NLog зарегистрирован в EmployeesController");
         }
 
+        /// <summary> Получение информации о сотруднике по его Id </summary>
+		/// <param name="id"> Id сотрудника </param>
+		/// <returns> Инорфмация о сотруднике </returns>
         [HttpGet("{id}")]
         public IActionResult Get([FromQuery] Guid id)
         {
@@ -32,13 +37,18 @@ namespace TimeSheets.Controllers
             return Ok(result);
         }
 
+        /// <summary> Получение информации о нескольких сотрудниках </summary>
+		/// <returns> Информацию о сотрудниках </returns>
         [HttpGet]
         public async Task<IActionResult> GetItems()
         {
             var result = await _employeeManager.GetItems();
             return Ok(result);
         }
-        
+
+        /// <summary> Создание записи о новом сотруднике </summary>
+        /// <param name="request"> Запрос на создание записи </param>
+        /// <returns> Id созданной записи </returns>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] EmployeeRequest employeeRequest)
         {    
@@ -46,7 +56,10 @@ namespace TimeSheets.Controllers
 
             return Ok(id);
         }
-       
+
+        /// <summary> Изменение существующей записи о сотруднике </summary>
+        /// <param name="id"> Id изменяемой записи </param>
+        /// <param name="request"> Запрос на изменение </param>
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] EmployeeRequest employeeRequest)
         { 
@@ -54,7 +67,9 @@ namespace TimeSheets.Controllers
 
             return Ok();
         }
-                
+
+        /// <summary>Удаление записи о сотруднике </summary>
+        /// <param name="id"> Id удаляемой записи </param>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {            

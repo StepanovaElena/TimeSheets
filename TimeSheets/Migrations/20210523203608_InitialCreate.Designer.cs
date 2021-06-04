@@ -9,7 +9,7 @@ using TimeSheets.Data.EntityConfiguration;
 
 namespace TimeSheets.Migrations
 {
-    [DbContext(typeof(TimesheetDbContext))]
+    [DbContext(typeof(TimeSheetDbContext))]
     [Migration("20210523203608_InitialCreate")]
     partial class InitialCreate
     {
