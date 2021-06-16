@@ -1,18 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using System;
-using System.IO;
-using System.Reflection;
-using TimeSheets.Data.EntityConfiguration;
-using TimeSheets.Data.Implementation;
-using TimeSheets.Data.Interfaces;
-using TimeSheets.Domain.Implementation;
-using TimeSheets.Domain.Interfaces;
+using TimeSheets.Infrastructure.Extensions;
+using FluentValidation.AspNetCore;
 
 namespace TimeSheets
 {
@@ -28,41 +20,15 @@ namespace TimeSheets
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.ConfigureDbContext(Configuration);
+            services.ConfigureAuthentication(Configuration);
+            services.ConfigureRepositories();
+            services.ConfigureDomainManagers();
+            services.ConfigureBackendSwagger();
 
-            //Postres
-            services.AddDbContext<TimesheetDbContext>(options =>
-            {
-                options.UseNpgsql(
-                    Configuration.GetConnectionString("Postgres"),
-                    b => b.MigrationsAssembly("TimeSheets"));
-            });
+            services.AddControllers().AddFluentValidation();
 
-            // Swagger  
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Version = "v1",
-                    Title = "API for Time Sheets service",
-                });
-
-                //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                //c.IncludeXmlComments(xmlPath);
-            });
-
-            //Repositories
-            services.AddScoped<ISheetRepo, SheetRepo>();
-            services.AddScoped<IContractRepo, ContractRepo>();
-            services.AddScoped<IUserRepo, UserRepo>();
-            services.AddScoped<IEmployeeRepo, EmployeeRepo>();
-
-            //Managers
-            services.AddScoped<ISheetManager, SheetManager>();
-            services.AddScoped<IContractManager, ContractManager>();
-            services.AddScoped<IUserManager, UserManager>();
-            services.AddScoped<IEmployeeManager, EmployeeManager>();
+            services.ConfigureValidtion();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using TimeSheets.Models;
-using TimeSheets.Models.Dto;
+﻿using TimeSheets.Models;
+using TimeSheets.Models.Dto.Requests;
 
 namespace TimeSheets.Domain.Interfaces
 {
-    public interface ISheetManager
+    public interface ISheetManager: IBaseManager<Sheet, SheetRequest>
     {
-        Task<Sheet> GetItem(Guid id);
-        Task<IEnumerable<Sheet>> GetItems();
-        Task<Guid> Create(SheetRequest sheet);
-        Task Update(Guid id, SheetRequest sheetRequest);
+        
     }
 }

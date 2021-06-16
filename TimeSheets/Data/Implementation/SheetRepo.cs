@@ -11,9 +11,9 @@ namespace TimeSheets.Data.Implementation
 {
     public class SheetRepo: ISheetRepo
     {
-        private readonly TimesheetDbContext _context;
+        private readonly TimeSheetDbContext _context;
 
-        public SheetRepo(TimesheetDbContext context)
+        public SheetRepo(TimeSheetDbContext context)
         {
             _context = context;
         }
@@ -42,6 +42,28 @@ namespace TimeSheets.Data.Implementation
         {
             _context.Sheets.Update(item);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task Delete(Guid id)
+        {
+            var item = await _context.Sheets.FindAsync(id);
+            if (item != null)
+            {
+                item.IsDeleted = true;
+                _context.Sheets.Update(item);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<IEnumerable<Sheet>> GetItemsForInvoice(Guid contractId, DateTime dateStart, DateTime dateEnd)
+        {
+            var sheets = await _context.Sheets
+                .Where(x => x.ContractId == contractId)
+                .Where(x => x.Date <= dateEnd && x.Date >= dateStart)
+                .Where(x => x.InvoiceId == null)
+                .ToListAsync();
+
+            return sheets;
         }
     }
 }

@@ -3,7 +3,7 @@ using TimeSheets.Models;
 
 namespace TimeSheets.Data.EntityConfiguration
 {
-    public class TimesheetDbContext: DbContext
+    public class TimeSheetDbContext: DbContext
     {
         public DbSet<Client> Clients { get; set; }
         public DbSet<Contract> Contracts { get; set; }
@@ -11,8 +11,9 @@ namespace TimeSheets.Data.EntityConfiguration
         public DbSet<Service> Services { get; set; }
         public DbSet<Sheet> Sheets { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
 
-        public TimesheetDbContext(DbContextOptions<TimesheetDbContext> options):base(options)
+        public TimeSheetDbContext(DbContextOptions<TimeSheetDbContext> options):base(options)
         {
         }
 

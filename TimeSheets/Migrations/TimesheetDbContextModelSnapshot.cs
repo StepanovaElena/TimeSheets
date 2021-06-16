@@ -8,8 +8,8 @@ using TimeSheets.Data.EntityConfiguration;
 
 namespace TimeSheets.Migrations
 {
-    [DbContext(typeof(TimesheetDbContext))]
-    partial class TimesheetDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(TimeSheetDbContext))]
+    partial class TimeSheetDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -28,10 +28,13 @@ namespace TimeSheets.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid>("User")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("clients");
                 });
@@ -76,6 +79,9 @@ namespace TimeSheets.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
                     b.ToTable("employees");
                 });
 
@@ -94,6 +100,9 @@ namespace TimeSheets.Migrations
                     b.Property<DateTime>("DateStart")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<decimal>("Sum")
                         .HasColumnType("numeric");
 
@@ -109,6 +118,9 @@ namespace TimeSheets.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -139,6 +151,9 @@ namespace TimeSheets.Migrations
                     b.Property<Guid?>("InvoiceId")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid>("ServiceId")
                         .HasColumnType("uuid");
 
@@ -161,6 +176,15 @@ namespace TimeSheets.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("Id");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("text");
+
                     b.Property<string>("Username")
                         .HasColumnType("text");
 
@@ -169,10 +193,32 @@ namespace TimeSheets.Migrations
                     b.ToTable("users");
                 });
 
+            modelBuilder.Entity("TimeSheets.Models.Client", b =>
+                {
+                    b.HasOne("TimeSheets.Models.User", "User")
+                        .WithOne("Client")
+                        .HasForeignKey("TimeSheets.Models.Client", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TimeSheets.Models.Employee", b =>
+                {
+                    b.HasOne("TimeSheets.Models.User", "User")
+                        .WithOne("Employee")
+                        .HasForeignKey("TimeSheets.Models.Employee", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TimeSheets.Models.Invoice", b =>
                 {
                     b.HasOne("TimeSheets.Models.Contract", "Contract")
-                        .WithMany()
+                        .WithMany("Invoices")
                         .HasForeignKey("ContractId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -213,8 +259,50 @@ namespace TimeSheets.Migrations
                     b.Navigation("Service");
                 });
 
+            modelBuilder.Entity("TimeSheets.Models.User", b =>
+                {
+                    b.OwnsMany("TimeSheets.Models.RefreshToken", "RefreshTokens", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer")
+                                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                            b1.Property<DateTime>("Created")
+                                .HasColumnType("timestamp without time zone");
+
+                            b1.Property<Guid>("CreatedBy")
+                                .HasColumnType("uuid");
+
+                            b1.Property<DateTime>("Expires")
+                                .HasColumnType("timestamp without time zone");
+
+                            b1.Property<string>("ReplacedByToken")
+                                .HasColumnType("text");
+
+                            b1.Property<DateTime?>("Revoked")
+                                .HasColumnType("timestamp without time zone");
+
+                            b1.Property<string>("Token")
+                                .HasColumnType("text");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("CreatedBy");
+
+                            b1.ToTable("RefreshToken");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CreatedBy");
+                        });
+
+                    b.Navigation("RefreshTokens");
+                });
+
             modelBuilder.Entity("TimeSheets.Models.Contract", b =>
                 {
+                    b.Navigation("Invoices");
+
                     b.Navigation("Sheets");
                 });
 
@@ -231,6 +319,13 @@ namespace TimeSheets.Migrations
             modelBuilder.Entity("TimeSheets.Models.Service", b =>
                 {
                     b.Navigation("Sheets");
+                });
+
+            modelBuilder.Entity("TimeSheets.Models.User", b =>
+                {
+                    b.Navigation("Client");
+
+                    b.Navigation("Employee");
                 });
 #pragma warning restore 612, 618
         }

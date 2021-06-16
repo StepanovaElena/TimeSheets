@@ -8,7 +8,9 @@ namespace TimeSheets.Models
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        
+        public bool IsDeleted { get; internal set; }
+
+        // Навигационные свойства
         public ICollection<Sheet> Sheets { get; set; }
     }
 }
