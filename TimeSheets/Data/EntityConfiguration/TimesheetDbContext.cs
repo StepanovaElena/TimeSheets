@@ -11,6 +11,7 @@ namespace TimeSheets.Data.EntityConfiguration
         public DbSet<Service> Services { get; set; }
         public DbSet<Sheet> Sheets { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
 
         public TimeSheetDbContext(DbContextOptions<TimeSheetDbContext> options):base(options)
         {

@@ -1,5 +1,5 @@
 ﻿using TimeSheets.Models;
-using TimeSheets.Models.Dto;
+using TimeSheets.Models.Dto.Requests;
 
 namespace TimeSheets.Domain.Interfaces
 {

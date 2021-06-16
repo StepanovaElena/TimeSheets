@@ -12,7 +12,9 @@ namespace TimeSheets.Models
         public DateTime DateEnd { get; set; }
         public string Description { get; set; }
         public bool IsDeleted { get; set; }
-        
+
+        // Навигационные свойства
         public ICollection<Sheet> Sheets { get; set; }
+        public ICollection<Invoice> Invoices { get; set; }
     }
 }

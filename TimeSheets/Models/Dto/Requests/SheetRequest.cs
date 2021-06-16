@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TimeSheets.Models.Dto
+namespace TimeSheets.Models.Dto.Requests
 {
     public class SheetRequest
     {

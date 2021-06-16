@@ -11,12 +11,13 @@ namespace TimeSheets.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize(Roles = "admin")]
-    public class InvoicesController : ControllerBase
+    public class InvoicesController : TimeSheetBaseController
     {
         private readonly ILogger<InvoicesController> _logger;
         private readonly IInvoiceManager _invoiceManager;
+		private readonly IContractManager _contractManager;
 
-        public InvoicesController(
+		public InvoicesController(
 			IInvoiceManager invoiceManager,
             ILogger<InvoicesController> logger)
         {
@@ -52,12 +53,19 @@ namespace TimeSheets.Controllers
 		/// <summary> Создание нового счета </summary>
 		/// <param name="request"> Запрос на создание счета </param>
 		/// <returns> Id созданного счета </returns>
+		
 		[Authorize(Roles = "admin")]
 		[HttpPost]
 		public async Task<IActionResult> Create([FromBody] InvoiceRequest request)
 		{
-			var id = await _invoiceManager.Create(request);
+			var isAllowedToCreate = await _contractManager.CheckContractIsActive(request.ContractId);
 
+			if (isAllowedToCreate != null && !(bool)isAllowedToCreate)
+			{
+				return BadRequest($"Contract {request.ContractId} is not active or not found.");
+			}
+
+			var id = await _invoiceManager.Create(request);
 			return Ok(id);
 		}
 

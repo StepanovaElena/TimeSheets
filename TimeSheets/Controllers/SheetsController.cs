@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TimeSheets.Domain.Interfaces;
-using TimeSheets.Models.Dto;
+using TimeSheets.Models.Dto.Requests;
 
 namespace TimeSheets.Controllers
 {    
     [ApiController]
     [Route("[controller]")]
-    public class SheetsController: ControllerBase
+    public class SheetsController: TimeSheetBaseController
     {
         private readonly ILogger<SheetsController> _logger;
         private readonly ISheetManager _sheetManager;

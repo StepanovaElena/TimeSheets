@@ -10,7 +10,7 @@ namespace TimeSheets.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ContractsController : ControllerBase
+    public class ContractsController : TimeSheetBaseController
     {
         private readonly ILogger<ContractsController> _logger;
         private readonly IContractManager _contractManager;

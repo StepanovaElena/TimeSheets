@@ -6,7 +6,10 @@ namespace TimeSheets.Models
     public class Client
     {
         public Guid Id { get; set; }
-        public Guid User { get; set; }
+        public Guid UserId { get; set; }
         public bool IsDeleted { get; set; }
+
+        // Навигационное свойство
+        public User User { get; set; }
     }
 }

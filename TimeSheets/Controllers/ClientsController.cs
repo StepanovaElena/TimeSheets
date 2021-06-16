@@ -11,7 +11,7 @@ namespace TimeSheets.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize(Roles = "admin")]
-    public class ClientsController : ControllerBase
+    public class ClientsController : TimeSheetBaseController
     {
         private readonly ILogger<ClientsController> _logger;
         private readonly IClientManager _clientManager;
@@ -68,6 +68,7 @@ namespace TimeSheets.Controllers
 
             return Ok();
         }
+
         /// <summary> Удаление клиента </summary>
         /// <param name="id"> Id удаляемого клиента </param>
         [HttpDelete("{id}")]

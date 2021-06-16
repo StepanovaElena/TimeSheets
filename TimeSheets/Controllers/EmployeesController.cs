@@ -11,7 +11,7 @@ namespace TimeSheets.Controllers
     [ApiController]
     [Route("[controller]")]
     [Authorize(Roles = "admin")]
-    public class EmployeesController : ControllerBase
+    public class EmployeesController : TimeSheetBaseController
     {
         private readonly ILogger<EmployeesController> _logger;
         private readonly IEmployeeManager _employeeManager;

@@ -9,7 +9,7 @@ namespace TimeSheets.Controllers
 {
     [ApiController]
     [Route("api")]
-    public class LoginController: ControllerBase
+    public class LoginController: TimeSheetBaseController
     {
         private readonly IUserManager _userManager;
         private readonly ILoginManager _loginManager;

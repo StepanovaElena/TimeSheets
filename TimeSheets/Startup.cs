@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TimeSheets.Infrastructure.Extensions;
+using FluentValidation.AspNetCore;
 
 namespace TimeSheets
 {
@@ -25,7 +26,9 @@ namespace TimeSheets
             services.ConfigureDomainManagers();
             services.ConfigureBackendSwagger();
 
-            services.AddControllers();            
+            services.AddControllers().AddFluentValidation();
+
+            services.ConfigureValidtion();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

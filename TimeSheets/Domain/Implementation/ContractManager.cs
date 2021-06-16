@@ -17,34 +17,54 @@ namespace TimeSheets.Domain.Implementation
             _contractRepo = contractRepo;
         }
 
-        public async Task<bool?> CheckContractIsActive(Guid id)
-        {
-            return await _contractRepo.CheckContractIsActive(id);
-        }
+		public async Task<Contract> GetItem(Guid id)
+		{
+			return await _contractRepo.GetItem(id);
+		}
 
-        public Task<Guid> Create(ContractRequest request)
-        {
-            throw new NotImplementedException();
-        }
+		public async Task<IEnumerable<Contract>> GetItems()
+		{
+			return await _contractRepo.GetItems();
+		}
 
-        public Task Delete(Guid id)
-        {
-            throw new NotImplementedException();
-        }
+		public async Task<Guid> Create(ContractRequest request)
+		{
+			var contract = new Contract()
+			{
+				Id = Guid.NewGuid(),
+				Title = request.Title,
+				DateStart = request.DateStart,
+				DateEnd = request.DateEnd,
+				Description = request.Description,
+				IsDeleted = false,
+			};
 
-        public Task<Contract> GetItem(Guid id)
-        {
-            throw new NotImplementedException();
-        }
+			await _contractRepo.Add(contract);
 
-        public Task<IEnumerable<Contract>> GetItems()
-        {
-            throw new NotImplementedException();
-        }
+			return contract.Id;
+		}
 
-        public Task Update(Guid id, ContractRequest request)
-        {
-            throw new NotImplementedException();
-        }
-    }
+		public async Task Update(Guid id, ContractRequest request)
+		{
+			var item = await _contractRepo.GetItem(id);
+
+			if (item != null)
+			{
+				item.Title = request.Title;
+				item.Description = request.Description;
+
+				await _contractRepo.Update(item);
+			}
+		}
+
+		public async Task<bool?> CheckContractIsActive(Guid id)
+		{
+			return await _contractRepo.CheckContractIsActive(id);
+		}
+
+		public async Task Delete(Guid id)
+		{
+			await _contractRepo.Delete(id);
+		}
+	}
 }

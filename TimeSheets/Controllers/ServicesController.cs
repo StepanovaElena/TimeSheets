@@ -10,7 +10,7 @@ namespace TimeSheets.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ServicesController : ControllerBase
+    public class ServicesController : TimeSheetBaseController
     {
         private readonly ILogger<ServicesController> _logger;
         private readonly IServiceManager _serviceManager;
@@ -33,6 +33,7 @@ namespace TimeSheets.Controllers
         public async Task<IActionResult> Get(Guid id)
         {
             var result = await _serviceManager.GetItem(id);
+
             return Ok(result);
         }
 
@@ -43,6 +44,7 @@ namespace TimeSheets.Controllers
         public async Task<IActionResult> GetItems()
         {
             var result = await _serviceManager.GetItems();
+
             return Ok(result);
         }
         /// <summary>Создание нового услуги</summary>
@@ -53,6 +55,7 @@ namespace TimeSheets.Controllers
         public async Task<IActionResult> Create([FromBody] ServiceRequest request)
         {
             var id = await _serviceManager.Create(request);
+
             return Ok(id);
         }
         /// <summary>Изменение существующй услуги</summary>
@@ -63,6 +66,7 @@ namespace TimeSheets.Controllers
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] ServiceRequest request)
         {
             await _serviceManager.Update(id, request);
+
             return Ok();
         }
 
@@ -73,6 +77,7 @@ namespace TimeSheets.Controllers
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             await _serviceManager.Delete(id);
+
             return Ok();
         }
     }

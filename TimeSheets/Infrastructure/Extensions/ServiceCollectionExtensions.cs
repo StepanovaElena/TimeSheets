@@ -11,6 +11,10 @@ using TimeSheets.Domain.Implementation;
 using TimeSheets.Domain.Interfaces;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using TimeSheets.Models.Dto;
+using TimeSheets.Infrastructure.Validation;
+using FluentValidation;
+using TimeSheets.Models.Dto.Requests;
 
 namespace TimeSheets.Infrastructure.Extensions
 {
@@ -50,19 +54,25 @@ namespace TimeSheets.Infrastructure.Extensions
         }
 
         public static void ConfigureDomainManagers(this IServiceCollection services)
-        {
-            services.AddScoped<ISheetManager, SheetManager>();
+        {    
+            services.AddScoped<IClientManager, ClientManager>();
             services.AddScoped<IContractManager, ContractManager>();
+            services.AddScoped<IEmployeeManager, EmployeeManager>();
+            services.AddScoped<IInvoiceManager, InvoiceManager>();
+            services.AddScoped<IServiceManager, ServiceManager>();
+            services.AddScoped<ISheetManager, SheetManager>();
             services.AddScoped<IUserManager, UserManager>();
-            services.AddScoped<ILoginManager, LoginManager>();
         }
 
         public static void ConfigureRepositories(this IServiceCollection services)
-        {
-            services.AddScoped<ISheetRepo, SheetRepo>();
+        {           
+            services.AddScoped<IClientRepo, ClientRepo>();
             services.AddScoped<IContractRepo, ContractRepo>();
-            services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<IEmployeeRepo, EmployeeRepo>();
+            services.AddScoped<IInvoiceRepo, InvoiceRepo>();
+            services.AddScoped<IServiceRepo, ServiceRepo>();
+            services.AddScoped<ISheetRepo, SheetRepo>();
+            services.AddScoped<IUserRepo, UserRepo>();
         }
         
         public static void ConfigureBackendSwagger(this IServiceCollection services)
@@ -88,6 +98,14 @@ namespace TimeSheets.Infrastructure.Extensions
                     }
                 });
             });
+        }
+        public static void ConfigureValidtion(this IServiceCollection services)
+        {            
+            services.AddTransient<IValidator<SheetRequest>, SheetRequestValidator>();
+            services.AddTransient<IValidator<InvoiceRequest>, InvoiceRequestValidator>();
+            services.AddTransient<IValidator<UserRequest>, UserRequestValidator>();
+            services.AddTransient<IValidator<EmployeeRequest>, EmployeeRequestValidator>();
+            services.AddTransient<IValidator<ClientRequest>, ClientRequestValidator>();
         }
     }
 }

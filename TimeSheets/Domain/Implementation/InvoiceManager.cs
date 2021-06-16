@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TimeSheets.Data.Interfaces;
 using TimeSheets.Domain.Interfaces;
 using TimeSheets.Models;
 using TimeSheets.Models.Dto.Requests;
@@ -10,29 +11,70 @@ namespace TimeSheets.Domain.Implementation
 {
     public class InvoiceManager : IInvoiceManager
     {
-        public Task<Guid> Create(InvoiceRequest request)
+        private readonly IInvoiceRepo _invoiceRepo;
+        private readonly ISheetRepo _sheetRepo;
+
+        private const int payRate = 100;
+
+        public InvoiceManager(IInvoiceRepo invoceRepo, ISheetRepo sheetRepo)
         {
-            throw new NotImplementedException();
+            _invoiceRepo = invoceRepo;
+            _sheetRepo = sheetRepo;
         }
 
-        public Task Delete(Guid id)
+        public async Task<Invoice> GetItem(Guid id)
         {
-            throw new NotImplementedException();
+            return await _invoiceRepo.GetItem(id);
         }
 
-        public Task<Invoice> GetItem(Guid id)
+        public async Task<IEnumerable<Invoice>> GetItems()
         {
-            throw new NotImplementedException();
+            return await _invoiceRepo.GetItems();
         }
 
-        public Task<IEnumerable<Invoice>> GetItems()
+        public async Task<Guid> Create(InvoiceRequest request)
         {
-            throw new NotImplementedException();
+            var invoice = new Invoice()
+            {
+                Id = Guid.NewGuid(),
+                ContractId = request.ContractId,
+                DateStart = request.DateStart,
+                DateEnd = request.DateEnd
+            };
+
+            var sheets = await _sheetRepo.GetItemsForInvoice(request.ContractId, request.DateStart, request.DateEnd);
+
+            invoice.Sheets.AddRange(sheets);
+            invoice.Sum = invoice.Sheets.Sum(x => x.Amount * payRate);
+
+            await _invoiceRepo.Add(invoice);
+
+            return invoice.Id;
         }
 
-        public Task Update(Guid id, InvoiceRequest request)
+        public async Task Update(Guid id, InvoiceRequest request)
         {
-            throw new NotImplementedException();
+            var invoice = await _invoiceRepo.GetItem(id);
+
+            if (invoice != null)
+            {                
+                invoice.ContractId = request.ContractId;
+                invoice.DateStart = request.DateStart;
+                invoice.DateEnd = request.DateEnd;
+
+                var sheets = await _sheetRepo.GetItemsForInvoice(request.ContractId, request.DateStart, request.DateEnd);
+
+                invoice.Sheets.Clear();
+                invoice.Sheets.AddRange(sheets);
+                invoice.Sum = invoice.Sheets.Sum(x => x.Amount * payRate);
+                
+                await _invoiceRepo.Update(invoice);
+            }
+        }
+
+        public async Task Delete(Guid id)
+        {           
+            await _invoiceRepo.Delete(id);
         }
     }
 }
